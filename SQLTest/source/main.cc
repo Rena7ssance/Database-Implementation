@@ -164,21 +164,6 @@ int main (int numArgs, char **args) {
 						// print it out
 						final->printSFWQuery ();
 
-						/* 
-							Roy7wt
-						*/
-						// MyDB_TableReaderWriterPtr out = final->runSFWQuery(
-						// 	myCatalog,
-						// 	allTables, 
-						// 	allTableReaderWriters, 
-						// 	allBPlusReaderWriters);
-						// MyDB_RecordPtr rec = out->getEmptyRecord ();
-						// MyDB_RecordIteratorAltPtr myIter = out->getIteratorAlt ();
-
-						// for (int i = 0; i < 30 && myIter->advance(); i++) {
-						// 	myIter->getCurrent(rec);
-						// 	cout << rec << endl;
-						// }
 					}
 
 					// get outta here
