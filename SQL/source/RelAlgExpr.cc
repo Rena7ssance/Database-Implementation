@@ -26,12 +26,27 @@ MyDB_TableReaderWriterPtr Table :: run() {
 		projections.push_back("[" + a.first + "]");
 	}
 
-	MyDB_TablePtr tableOut = make_shared <MyDB_Table> ("roy7wt", "roy7wt.bin", schemaOut);
+	MyDB_TablePtr tableOut = make_shared <MyDB_Table> ("asdfasdf", "asdfasdf.bin", schemaOut);
 	MyDB_TableReaderWriterPtr output = make_shared <MyDB_TableReaderWriter> (tableOut, table->getBufferMgr());
 
 
-	RegularSelection op (table, output, "bool[true]", projections);
+	RegularSelection op (table, output, "&& (&& (== ([l_shipdate], string[1994-05-12]), == ([l_commitdate], string[1994-05-22])), == ([l_receiptdate], string[1994-06-10]))", projections);
 	op.run();
+
+	MyDB_RecordPtr temp = output->getEmptyRecord ();
+	MyDB_RecordIteratorAltPtr myIter = output->getIteratorAlt ();
+	int record_num = 0;
+	cout << "The first 30 records: " << endl;
+	while (myIter->advance ()) {
+		myIter->getCurrent (temp);
+
+							if (record_num < 30) {
+								cout << temp << "\n";
+
+							}
+							++ record_num;
+	}
+	cout << "Total number of records: " << record_num << endl;
 
 	return output;
 }

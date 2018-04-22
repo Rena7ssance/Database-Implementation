@@ -27,10 +27,15 @@ void RegularSelection :: run () {
 
 	// now, iterate through the B+-tree query results
 	MyDB_RecordIteratorAltPtr myIter = input->getIteratorAlt ();
-	
+
+	int i = 0;
 	while (myIter->advance ()) {
 		myIter->getCurrent (inputRec);
 
+		i++;
+		if (i % 10000 == 0) {
+			cout << i / 10000 << endl; 
+		}
 		// see if it is accepted by the predicate
 		if (!pred()->toBool ()) {
 			continue;
