@@ -11,6 +11,11 @@
 #include <algorithm>
 #include <iterator>
 
+
+// Roy7wt
+#include "Optimizer.h"
+#include "RelAlgExpr.h"
+
 using namespace std;
 string toLower (string data) {
 	transform(data.begin(), data.end(), data.begin(), ::tolower);
@@ -164,7 +169,23 @@ int main (int numArgs, char **args) {
 						// print it out
 						final->printSFWQuery ();
 
-					}
+						// Roy7wt
+						// Optimizer optimizer(allTables, allTableReaderWriters, allBPlusReaderWriters,
+						// 	final->getSFWQuery().getValuesToSelect(),
+						// 	final->getSFWQuery().getTablesToProcess(),
+						// 	final->getSFWQuery().getAllDisjunctions(),
+						// 	final->getSFWQuery().getGroupingClause()
+						// 	);
+
+						// cout << "Roy7wt here" << endl;
+						// MyDB_TableReaderWriterPtr output = optimizer.opt(
+						// final->getSFWQuery().getAllDisjunctions(),
+						// final->getSFWQuery().getTablesToProcess(),
+						// final->getSFWQuery().getValuesToSelect());
+
+						Table t = Table(allTableReaderWriters[final->getSFWQuery().getTablesToProcess()[0].first],final->getSFWQuery().getTablesToProcess()[0].second);
+						t.run();
+					}	
 
 					// get outta here
 					if (final != nullptr)

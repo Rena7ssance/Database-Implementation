@@ -263,16 +263,18 @@ public:
 	}
 
 	// Roy7wt
+
+
+	vector <ExprTreePtr> &getValuesToSelect(){
+		return valuesToSelect;
+	}
+
 	vector <pair <string, string>> &getTablesToProcess () {
 		return tablesToProcess;
 	}
 
 	vector <ExprTreePtr> &getAllDisjunctions () {
 		return allDisjunctions;
-	}
-
-	vector <ExprTreePtr> &getValuesToSelect(){
-		return valuesToSelect;
 	}
 
 	vector <ExprTreePtr> &getGroupingClause(){
@@ -324,77 +326,11 @@ public:
 		myQuery.print ();
 	}
 
-
+	SFWQuery getSFWQuery() {
+		return myQuery;
+	}
 	// Roy7wt 4.19
 
-	MyDB_TableReaderWriterPtr runSFWQuery (
-		MyDB_CatalogPtr catalog,
-		map <string, MyDB_TablePtr> allTables,
-		map<string, MyDB_TableReaderWriterPtr> allTableReaderWriters,
-		map <string, MyDB_BPlusTreeReaderWriterPtr> allBPlusReaderWriters) {
-
-		// Single selection
-		string tableName = myQuery.getTablesToProcess()[0].first;
-
-		// get the input table 
-		MyDB_TablePtr t = allTables[tableName];
-		MyDB_TableReaderWriterPtr tableInputPtr = nullptr;
-		if (t->getFileType() == "heap") {
-			tableInputPtr = allTableReaderWriters[tableName];
-		} else if (t->getFileType() == "bplustree") {
-			tableInputPtr = allBPlusReaderWriters[tableName];
-		} else return nullptr;
-
-
-		// attributed and type define
-		vector <string> atts;
-		catalog->getStringList(tableName + ".attList", atts);
-		unordered_map <string, MyDB_AttTypePtr> look_up;
-		look_up["int"] = make_shared <MyDB_IntAttType> ();
-		look_up["double"] = make_shared <MyDB_DoubleAttType> ();
-		look_up["bool"] = make_shared <MyDB_BoolAttType> ();
-		look_up["string"] = make_shared <MyDB_StringAttType> ();
-
-		unordered_map <string, MyDB_AttTypePtr> attrsMap;
-		for (string att : atts) {
-			string type;
-			catalog->getString(tableName + "." + att + ".type", type);
-			cout << type << endl;
-			attrsMap["[" + att + "]"] = look_up[type];
-		}
-
-
-
-		MyDB_SchemaPtr mySchema = make_shared <MyDB_Schema> ();
-		vector <string> projections;
-		for (auto a : myQuery.getValuesToSelect()) {
-			string attName = a->toString();
-			size_t pos = attName.find("_");
-			attName = attName.substr(pos, -1);
-			cout << attName << endl;
-			if (attrsMap.find(attName) != attrsMap.end()) {
-				cout << "yes" << endl;
-				MyDB_AttTypePtr attTypePtr = attrsMap[attName];
-				mySchema->appendAtt(make_pair(attName, attTypePtr));
-			}
-
-			projections.push_back(attName);
-		}
-
-
-		string tableOutName = "test";
-		MyDB_TablePtr myTableOut = make_shared <MyDB_Table> (tableOutName, tableOutName + ".bin", mySchema);
-		MyDB_TableReaderWriterPtr tableOut = make_shared <MyDB_TableReaderWriter> (myTableOut, (tableInputPtr->getBufferMgr()));
-
-		string selectionPredicateIn = "bool[true]";
-		for (auto a : myQuery.getAllDisjunctions()) {
-			selectionPredicateIn += "&& (" + a->toString() + ", " + selectionPredicateIn + ")";
-		}
-
-		RegularSelection sql (tableInputPtr, tableOut, selectionPredicateIn, projections);
-		sql.run();
-		return tableOut;
-	}
 
 
 	#include "FriendDecls.h"

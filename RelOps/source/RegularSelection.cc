@@ -27,8 +27,8 @@ void RegularSelection :: run () {
 
 	// now, iterate through the B+-tree query results
 	MyDB_RecordIteratorAltPtr myIter = input->getIteratorAlt ();
+	
 	while (myIter->advance ()) {
-
 		myIter->getCurrent (inputRec);
 
 		// see if it is accepted by the predicate
