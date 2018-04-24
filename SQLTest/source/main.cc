@@ -14,7 +14,6 @@
 
 // Roy7wt
 #include "Optimizer.h"
-#include "RelAlgExpr.h"
 
 using namespace std;
 string toLower (string data) {
@@ -169,22 +168,40 @@ int main (int numArgs, char **args) {
 						// print it out
 						final->printSFWQuery ();
 
+						// check and assign the att type
+						final->checkSFWQuery (myCatalog);
+
+						// print it out
+						final->printSFWQuery ();
+
 						// Roy7wt
-						// Optimizer optimizer(allTables, allTableReaderWriters, allBPlusReaderWriters,
-						// 	final->getSFWQuery().getValuesToSelect(),
-						// 	final->getSFWQuery().getTablesToProcess(),
-						// 	final->getSFWQuery().getAllDisjunctions(),
-						// 	final->getSFWQuery().getGroupingClause()
-						// 	);
+						Optimizer optimizer(allTables, allTableReaderWriters, allBPlusReaderWriters,
+							final->getSFWQuery().getValuesToSelect(),
+							final->getSFWQuery().getTablesToProcess(),
+							final->getSFWQuery().getAllDisjunctions(),
+							final->getSFWQuery().getGroupingClause()
+							);	
 
-						// cout << "Roy7wt here" << endl;
-						// MyDB_TableReaderWriterPtr output = optimizer.opt(
-						// final->getSFWQuery().getAllDisjunctions(),
-						// final->getSFWQuery().getTablesToProcess(),
-						// final->getSFWQuery().getValuesToSelect());
+						optimizer.execute();
+						// pair <RelAlgExprPtr, int> t = optimizer.optimize();
+						// MyDB_TableReaderWriterPtr output = t.first->run();
+						// output->writeIntoTextFile ("test.out");
 
-						Table t = Table(allTableReaderWriters[final->getSFWQuery().getTablesToProcess()[0].first],final->getSFWQuery().getTablesToProcess()[0].second);
-						t.run();
+						// MyDB_RecordPtr temp = output->getEmptyRecord ();
+						// MyDB_RecordIteratorAltPtr myIter =
+						// 	output->getIteratorAlt ();
+						// int record_num = 0;
+						// cout << "The first 30 records: " << endl;
+						// while (myIter->advance ()) {
+						// 	myIter->getCurrent (temp);
+
+						// 	if (record_num < 30) {
+						// 		cout << temp << "\n";
+
+						// 	}
+						// 	++ record_num;
+						// }
+						// cout << "Total number of records: " << record_num << endl;
 					}	
 
 					// get outta here

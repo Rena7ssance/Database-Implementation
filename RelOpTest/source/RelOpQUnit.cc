@@ -98,7 +98,7 @@ int main () {
 
 		// now, we count the total number of records 
 		vector <pair <MyDB_AggType, string>> aggsToCompute;
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: cnt, "int[0]"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: cntType, "int[0]"));
 
 		vector <string> groupings;
 		MyDB_SchemaPtr mySchemaOutAgain  = make_shared <MyDB_Schema> ();
@@ -150,7 +150,7 @@ int main () {
 
 		// now, we count the total number of records 
 		vector <pair <MyDB_AggType, string>> aggsToCompute;
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: cnt, "int[0]"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: cntType, "int[0]"));
 
 		vector <string> groupings;
 		MyDB_SchemaPtr mySchemaOutAgain  = make_shared <MyDB_Schema> ();
@@ -233,7 +233,7 @@ int main () {
 
 		// now, we count the total number of records with each nation name
 		vector <pair <MyDB_AggType, string>> aggsToCompute;
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: cnt, "int[0]"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: cntType, "int[0]"));
 
 		vector <string> groupings;
 		groupings.push_back ("[l_name]");
@@ -316,9 +316,9 @@ int main () {
 
 	{
 		vector <pair <MyDB_AggType, string>> aggsToCompute;
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: avg, "* ([r_suppkey], double[1.0])"));
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: avg, "[r_acctbal]"));
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: cnt, "int[0]"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: avgType, "* ([r_suppkey], double[1.0])"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: avgType, "[r_acctbal]"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: cntType, "int[0]"));
 
 		vector <string> groupings;
 		groupings.push_back ("[r_suppkey]");
@@ -358,9 +358,9 @@ int main () {
 
 	{
 		vector <pair <MyDB_AggType, string>> aggsToCompute;
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: avg, "* ([r_suppkey], double[1.0])"));
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: avg, "[r_acctbal]"));
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: cnt, "int[0]"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: avgType, "* ([r_suppkey], double[1.0])"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: avgType, "[r_acctbal]"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: cntType, "int[0]"));
 
 		vector <string> groupings;
 		groupings.push_back ("/ ([r_suppkey], int[100])");
@@ -395,7 +395,7 @@ int main () {
 		}
 
 		aggsToCompute.clear ();
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: sum, "[r_cnt]"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: sumType, "[r_cnt]"));
 
 		groupings.clear ();
 		
@@ -484,7 +484,7 @@ int main () {
 
 		// now, we count the total number of records with each nation name
 		vector <pair <MyDB_AggType, string>> aggsToCompute;
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: cnt, "int[0]"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: cntType, "int[0]"));
 
 		vector <string> groupings;
 		groupings.push_back ("[nation]");
@@ -565,7 +565,7 @@ int main () {
 
 		// now, we count the total number of records with each nation name
 		vector <pair <MyDB_AggType, string>> aggsToCompute;
-		aggsToCompute.push_back (make_pair (MyDB_AggType :: cnt, "int[0]"));
+		aggsToCompute.push_back (make_pair (MyDB_AggType :: cntType, "int[0]"));
 
 		vector <string> groupings;
 		MyDB_SchemaPtr mySchemaOutAgain  = make_shared <MyDB_Schema> ();

@@ -13,7 +13,6 @@
 
 
 // Roy7wt
-#include "RegularSelection.h"
 #include "MyDB_TableReaderWriter.h"
 #include "MyDB_BPlusTreeReaderWriter.h"
 #include <unordered_map>
@@ -265,20 +264,62 @@ public:
 	// Roy7wt
 
 
-	vector <ExprTreePtr> &getValuesToSelect(){
+	vector <ExprTreePtr> getValuesToSelect(){
 		return valuesToSelect;
 	}
 
-	vector <pair <string, string>> &getTablesToProcess () {
+	vector <pair <string, string>> getTablesToProcess () {
 		return tablesToProcess;
 	}
 
-	vector <ExprTreePtr> &getAllDisjunctions () {
+	vector <ExprTreePtr> getAllDisjunctions () {
 		return allDisjunctions;
 	}
 
-	vector <ExprTreePtr> &getGroupingClause(){
+	vector <ExprTreePtr> getGroupingClause(){
 		return groupingClauses;
+	}
+
+	void check(MyDB_CatalogPtr catalog) {
+		vector <string> tables;
+		catalog->getStringList("tables", tables);
+
+		cout << "[------------wq3: semantical check part------------]" << endl;
+		for (auto t : tablesToProcess) { // the tables in the from 
+			bool tableInCatalog = false;
+			for (auto table : tables) { // the tables existing in the database
+				if (t.first == table) {
+					tableInCatalog = true;
+					break;
+				}
+			}
+			if (!tableInCatalog) { // the table to process is not in the catalog file,
+				cout << "[SemanticError: Table (" << t.first <<" ) does not exist in the database]" << endl;
+				return;
+			}
+		}	
+
+
+		/*
+			cannot a->setAttType(); failure where a is avg(xxx), but xxx is not be set
+		*/
+		vector<ExprTreePtr> emptyVec;
+		for (auto a : valuesToSelect) {
+			if (!a->checkFunc(catalog, tablesToProcess, groupingClauses)) {
+				return;
+			}
+		}
+		for (auto a : allDisjunctions) {
+			if (!a->checkFunc(catalog, tablesToProcess, emptyVec)) {
+				return;
+			}
+		}
+		for (auto a : groupingClauses) {
+			if (!a->checkFunc(catalog, tablesToProcess, emptyVec)) {
+				return;
+			}
+		}
+		cout << "[------------wq3: Semantic Check Complete------------]" << endl;
 	}
 
 	#include "FriendDecls.h"
@@ -326,10 +367,15 @@ public:
 		myQuery.print ();
 	}
 
+	// Roy7wt
+
+	void checkSFWQuery (MyDB_CatalogPtr catalog) {
+		myQuery.check(catalog);
+	}
+
 	SFWQuery getSFWQuery() {
 		return myQuery;
 	}
-	// Roy7wt 4.19
 
 
 
