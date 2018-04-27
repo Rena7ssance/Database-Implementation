@@ -14,6 +14,7 @@
 
 // Roy7wt
 #include "Optimizer.h"
+#include <cstdio>
 
 using namespace std;
 string toLower (string data) {
@@ -90,6 +91,24 @@ int main (int numArgs, char **args) {
 					for (auto &a : allTables) {
 						a.second->putInCatalog (myCatalog);
 					}
+
+
+					// delete temp file
+					int fileCount = -1;
+					for (int i = 0; i <= RelAlgExpr :: maxTableId; i++) {
+						string fileName = "table" + to_string(i) + ".bin";
+						if (remove(fileName.c_str()) != 0) {
+							cout << "Error delete file: " + fileName << endl;
+						} else {
+							fileCount++;
+						}
+					}
+					if (fileCount-1 == RelAlgExpr :: maxTableId) {
+						cout << "Delete all temporary files" << endl;
+					} else {
+						cout << "Still some files remains in the Build/ directory" << endl;
+					}
+
 					return 0;
 				}
 
@@ -183,25 +202,7 @@ int main (int numArgs, char **args) {
 							);	
 
 						optimizer.execute();
-						// pair <RelAlgExprPtr, int> t = optimizer.optimize();
-						// MyDB_TableReaderWriterPtr output = t.first->run();
-						// output->writeIntoTextFile ("test.out");
 
-						// MyDB_RecordPtr temp = output->getEmptyRecord ();
-						// MyDB_RecordIteratorAltPtr myIter =
-						// 	output->getIteratorAlt ();
-						// int record_num = 0;
-						// cout << "The first 30 records: " << endl;
-						// while (myIter->advance ()) {
-						// 	myIter->getCurrent (temp);
-
-						// 	if (record_num < 30) {
-						// 		cout << temp << "\n";
-
-						// 	}
-						// 	++ record_num;
-						// }
-						// cout << "Total number of records: " << record_num << endl;
 					}	
 
 					// get outta here

@@ -44,6 +44,10 @@ public:
 	virtual bool isIdentifierAtt() {return false;}
 	virtual bool isAggregateAtt() {return false;}
 	virtual pair <string, string> getAggregateAtt() {return make_pair("", "");};
+	virtual bool isReferToTable (string tableAlais) {return false;}
+	virtual bool isEqOp() {return false;}
+	virtual ExprTreePtr getLhs() {return nullptr;}
+	virtual ExprTreePtr getRhs() {return nullptr;}
 
 
 	MyDB_AttTypePtr getAttType() {
@@ -257,7 +261,7 @@ public:
 	bool checkFunc(
 		MyDB_CatalogPtr catalog,
 		vector <pair <string, string>> tablesToProcess,
-		vector <ExprTreePtr> groupingClauses ) {
+		vector <ExprTreePtr> groupingClauses) {
 
 		vector<string> tables;
 		catalog->getStringList("tables", tables);
@@ -330,6 +334,10 @@ public:
  		vec.push_back(shared_from_this());
  	}
 
+ 	bool isReferToTable(string tableAlais) {
+ 		return tableAlais == tableName;
+ 	}
+
 	~Identifier () {}
 };
 
@@ -391,6 +399,10 @@ public:
 	void getAtt(vector <ExprTreePtr> &vec) {	
 		lhs->getAtt(vec);
 		rhs->getAtt(vec);
+ 	}
+
+ 	bool isReferToTable(string tableAlais) {
+ 		return lhs->isReferToTable(tableAlais) || rhs->isReferToTable(tableAlais);
  	}
 
 	~MinusOp () {}
@@ -457,6 +469,10 @@ public:
 		rhs->getAtt(vec);
  	}
 
+ 	bool isReferToTable(string tableAlais) {
+ 		return lhs->isReferToTable(tableAlais) || rhs->isReferToTable(tableAlais);
+ 	}
+
 	~PlusOp () {}
 };
 
@@ -520,6 +536,10 @@ public:
 		rhs->getAtt(vec);
  	}
 
+ 	bool isReferToTable(string tableAlais) {
+ 		return lhs->isReferToTable(tableAlais) || rhs->isReferToTable(tableAlais);
+ 	}
+
 	~TimesOp () {}
 };
 
@@ -580,6 +600,10 @@ public:
 	void getAtt(vector <ExprTreePtr> &vec) {	
 		lhs->getAtt(vec);
 		rhs->getAtt(vec);
+ 	}
+
+ 	bool isReferToTable(string tableAlais) {
+ 		return lhs->isReferToTable(tableAlais) || rhs->isReferToTable(tableAlais);
  	}
 
 	~DivideOp () {}
@@ -646,6 +670,10 @@ public:
 		rhs->getAtt(vec);
  	}
 
+ 	bool isReferToTable(string tableAlais) {
+ 		return lhs->isReferToTable(tableAlais) || rhs->isReferToTable(tableAlais);
+ 	}
+
 	~GtOp () {}
 };
 
@@ -710,6 +738,10 @@ public:
 		rhs->getAtt(vec);
  	}
 
+ 	bool isReferToTable(string tableAlais) {
+ 		return lhs->isReferToTable(tableAlais) || rhs->isReferToTable(tableAlais);
+ 	}
+
 	~LtOp () {}
 };
 
@@ -763,6 +795,10 @@ public:
 	void getAtt(vector <ExprTreePtr> &vec) {	
 		lhs->getAtt(vec);
 		rhs->getAtt(vec);
+ 	}
+
+ 	bool isReferToTable(string tableAlais) {
+ 		return lhs->isReferToTable(tableAlais) || rhs->isReferToTable(tableAlais);
  	}
 
 	~NeqOp () {}
@@ -823,6 +859,10 @@ public:
 	void getAtt(vector <ExprTreePtr> &vec) {	
 		lhs->getAtt(vec);
 		rhs->getAtt(vec);
+ 	}	
+
+ 	bool isReferToTable(string tableAlais) {
+ 		return lhs->isReferToTable(tableAlais) || rhs->isReferToTable(tableAlais);
  	}
 
 	~OrOp () {}
@@ -841,6 +881,7 @@ public:
 		lhs = lhsIn;
 		rhs = rhsIn;
 	}
+
 
 	string toString () {
 		return "== (" + lhs->toString () + ", " + rhs->toString () + ")";
@@ -878,6 +919,22 @@ public:
 	void getAtt(vector <ExprTreePtr> &vec) {	
 		lhs->getAtt(vec);
 		rhs->getAtt(vec);
+ 	}
+
+ 	bool isReferToTable(string tableAlais) {
+ 		return lhs->isReferToTable(tableAlais) || rhs->isReferToTable(tableAlais);
+ 	}
+
+ 	bool isEqOp() {
+ 		return true;
+ 	}
+
+ 	ExprTreePtr getLhs() {
+ 		return lhs;
+ 	}
+
+ 	ExprTreePtr getRhs() {
+ 		return rhs;
  	}
 
 	~EqOp () {}
@@ -928,6 +985,10 @@ public:
 
 	void getAtt(vector <ExprTreePtr> &vec) {	
 		child->getAtt(vec);
+ 	}
+
+ 	bool isReferToTable(string tableAlais) {
+ 		return child->isReferToTable(tableAlais);
  	}
 
 	~NotOp () {}
@@ -989,6 +1050,10 @@ public:
  		return make_pair("sum", child->toString());
  	}
 
+ 	bool isReferToTable(string tableAlais) {
+ 		return child->isReferToTable(tableAlais);
+ 	}
+
 	~SumOp () {}
 };
 
@@ -1046,6 +1111,10 @@ public:
 
  	pair <string, string> getAggregateAtt() {
  		return make_pair("avg", child->toString());
+ 	}
+
+ 	bool isReferToTable(string tableAlais) {
+ 		return child->isReferToTable(tableAlais);
  	}
 
 	~AvgOp () {}

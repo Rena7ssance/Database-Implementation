@@ -309,10 +309,19 @@ public:
 				return;
 			}
 		}
+
+
 		for (auto a : allDisjunctions) {
 			if (!a->checkFunc(catalog, tablesToProcess, emptyVec)) {
 				return;
 			}
+
+			for (auto t : tablesToProcess) {
+				if (a->isReferToTable(t.second)) {
+					cout << a->toString() + "is in table " + t.second << endl;
+				}
+			}
+			
 		}
 		for (auto a : groupingClauses) {
 			if (!a->checkFunc(catalog, tablesToProcess, emptyVec)) {

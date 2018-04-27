@@ -18,9 +18,14 @@ public:
 
 
 	void execute();
-	pair <RelAlgExprPtr, int> optimize(vector <ExprTreePtr> newValuesToSelect);
+	pair <RelAlgExprPtr, int> optimize(
+		vector <ExprTreePtr> cnf, // allDisjunctions
+		vector <pair <string, string>> tablesToProcess,
+		vector <ExprTreePtr> newValuesToSelect);
 
-	MyDB_TableReaderWriterPtr getTable(string tableName);
+	MyDB_TableReaderWriterPtr getTableByName(string tableName);
+
+	vector< pair<vector <pair <string, string>>, vector <pair <string, string>>>> getAllSubsets(vector <pair <string, string>> tablesToProcess);
 
 private:
 

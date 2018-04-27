@@ -5,9 +5,9 @@
 #include "MyDB_TableReaderWriter.h"
 #include "MyDB_Schema.h"
 #include "ExprTree.h"
-
-#include "RegularSelection.h"
 #include "Aggregate.h"
+#include "RegularSelection.h"
+#include "ScanJoin.h"
 
 using namespace std;
 
@@ -26,6 +26,7 @@ public :
 	static vector <int> availableIds;
 	static int tableId;
 	static int getId ();
+	static int maxTableId;
 };
 
 class Table : public RelAlgExpr {
@@ -34,9 +35,7 @@ public :
 	Table (MyDB_TableReaderWriterPtr tableIn, string tableAlaisIn);
 	MyDB_TableReaderWriterPtr run();
 
-	string toString() {
-		return table->getTable()->getName();
-	}
+	string toString();
 
 	~Table () {}
 
@@ -68,6 +67,31 @@ private:
 	vector <ExprTreePtr> allDisjunctions;
 };
 
+
+class JoinSelection : public RelAlgExpr {
+
+public:
+	JoinSelection (RelAlgExprPtr leftIn, 
+		RelAlgExprPtr rightIn,
+		vector <ExprTreePtr> valuesToSelectIn,
+		vector <ExprTreePtr> allDisjunctionsIn);
+
+	MyDB_TableReaderWriterPtr run();
+
+	string toString();
+
+	~ JoinSelection() {}
+
+	size_t getTopCNFSize () {
+		return allDisjunctions.size ();
+	}
+
+private:
+	RelAlgExprPtr left;
+	RelAlgExprPtr right;
+	vector <ExprTreePtr> valuesToSelect;
+	vector <ExprTreePtr> allDisjunctions;
+};
 
 class AggregateSelection : public RelAlgExpr {
 

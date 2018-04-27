@@ -51,6 +51,8 @@ ScanJoin :: ScanJoin (MyDB_TableReaderWriterPtr leftInputIn, MyDB_TableReaderWri
 
 void ScanJoin :: run () {
 
+
+	cout << "ScanJoin.run() begin" << endl;
 	// this is the hash map we'll use to look up data... the key is the hashed value
 	// of all of the records' join keys, and the value is a list of pointers were all
 	// of the records with that hsah value are located
@@ -78,9 +80,13 @@ void ScanJoin :: run () {
 
 	// add all of the records to the hash table
 	MyDB_RecordIteratorAltPtr myIter = getIteratorAlt (allData);
-
+	int i = 0;
 	while (myIter->advance ()) {
 
+		i++;
+		if (i%10000 == 0) {
+			cout << i/10000 << endl;
+		}
 		// hash the current record
 		myIter->getCurrent (leftInputRec);
 
@@ -98,7 +104,9 @@ void ScanJoin :: run () {
 		// see if it is in the hash table
 		myHash [hashVal].push_back (myIter->getCurrentPointer ());
 	}
+	i = 0;
 
+	cout << "ScanJoin.run() mid" << endl;
 	// and now we iterate through the other table
 	
 	// get the right input record, and get the various functions over it
@@ -137,7 +145,11 @@ void ScanJoin :: run () {
 	// now, iterate through the right table
 	MyDB_RecordIteratorPtr myIterAgain = rightTable->getIterator (rightInputRec);
 	while (myIterAgain->hasNext ()) {
+		i++;
+		if (i%10000 == 0) {
+			cout << i/10000 << endl;
 
+		}
 		myIterAgain->getNext ();
 
 		// see if it is accepted by the preicate
@@ -185,6 +197,7 @@ void ScanJoin :: run () {
 			}
 		}
 	}
+	cout << "ScanJoin.run() end" << endl;
 }
 
 #endif
