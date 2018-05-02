@@ -15,6 +15,7 @@
 // Roy7wt
 #include "Optimizer.h"
 #include <cstdio>
+#include <time.h>
 
 using namespace std;
 string toLower (string data) {
@@ -201,7 +202,13 @@ int main (int numArgs, char **args) {
 							final->getSFWQuery().getGroupingClause()
 							);	
 
+						clock_t t1, t2;
+						t1 = clock();
 						optimizer.execute();
+						t2 = clock();
+						float diff ((float)t2-(float)t1);		 
+						float secs = diff / CLOCKS_PER_SEC;
+    					cout << "The running time of query is " << secs << " seconds" << endl;
 
 					}	
 
